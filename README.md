@@ -29,7 +29,7 @@ The USGS is interested in building a new set of tools that will allow them visua
 
 ### Level 2: More Data (Optional)
 
-![5-Advanced](Images/5-Advanced.png)
+![5-Advanced](Images/Leaflet-Step2.gif)
 
 In this, I have added a [platonic data set from USGS](https://github.com/fraxen/tectonicplates) on the previous map to illustrate the relationship between tectonic plates and seismic activity.
 
