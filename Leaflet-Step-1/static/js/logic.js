@@ -3,15 +3,15 @@ function getColor(mag) {
 
   return mag >= 5 ? "red" :
          mag >= 4 ? "orange" :
-         mag >= 3 ? "lime" :
-         mag >= 2 ? "limegreen" :
+         mag >= 3 ? "limegreen" :
+         mag >= 2 ? "lime" :
          mag >= 1 ? "lightgreen" :
          mag >= 0 ? "yellow" :
-                    "red";
+                    "white";
 }
 // function to determine marker size based on population
 function markerSize(magnitude) {
-  return magnitude * 20000;
+  return magnitude * 15000;
 }
 
 // function to add legend
@@ -99,16 +99,26 @@ function createMarkers(response) {
     place = locations[i].properties.place;
     var quakeMarker = L.circle([locations[i].geometry.coordinates[1],locations[i].geometry.coordinates[0]], {
       stroke: false,
-      fillOpacity: 0.75,
+      fillOpacity: 0.5,
       color: "white",
       fillColor: getColor(locations[i].properties.mag),
       radius: markerSize(locations[i].properties.mag)
     });
 
     // Add the marker to the quakeMarkers array
-    quakeMarkers.push(quakeMarker.bindPopup(`<h3>Magnitude : ${locations[i].properties.mag}</h3>Location: ${place}`));
+    quakeMarker.bindPopup(`<h3>Magnitude : ${locations[i].properties.mag}</h3>Location: ${place}`);
+    quakeMarker.on('mouseover', function (e) {
+      this.openPopup();
+    });
+    quakeMarker.on('mouseout', function (e) {
+      this.closePopup();
+    });
+    quakeMarker.on('click', function (e) {
+      this.openPopup();
+    });
+    quakeMarkers.push(quakeMarker);
 
-  }
+  };
 
   // Create a layer group made from the bike markers array, pass it into the createMap function
   createMap(L.layerGroup(quakeMarkers));
@@ -117,4 +127,4 @@ function createMarkers(response) {
 
 
 // Perform an API call to the Citi Bike API to get station information. Call createMarkers when complete
-d3.json("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson", createMarkers);
+d3.json("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_month.geojson", createMarkers);

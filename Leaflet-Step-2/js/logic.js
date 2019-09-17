@@ -5,17 +5,18 @@ function getColor(mag) {
 
   return mag >= 5 ? "red" :
          mag >= 4 ? "orange" :
-         mag >= 3 ? "lime" :
-         mag >= 2 ? "yellow" :
+         mag >= 3 ? "limegreen" :
+         mag >= 2 ? "lime" :
          mag >= 1 ? "lightgreen" :
-         mag >= 0 ? "limegreen" :
-                    "red";
+         mag >= 0 ? "yellow" :
+                    "white";
 }
 /*
 // function to determine marker size based on population
 */
 function markerSize(magnitude) {
-  return magnitude * 20000;
+
+  return magnitude * 15000;
 }
 /**** 
 // function to add legend
@@ -43,7 +44,31 @@ function addLegend(map) {
     // End of adding legend
 
 }
+/***
+ * Function that will show data on mouseover
+ * on GeoJson polygon feature
+ */
+function onEachFeature(feature, layer) {
+  
+  //layer.bindTooltip(feature.properties.PlateName, {closeButton: false, offset: L.point(30, -30)});
+  layer.on('mouseover', function () {
+    this.setStyle({
+      'fillColor': 'orange'
+    });
+  });
+  layer.on('mouseout', function () {
+    this.setStyle({
+      'fillColor': 'red'
+    });
+  });
+  layer.on('click', function () {
+    // Let's say you've got a property called url in your geojsonfeature:
+    this.openPopup(`${feature.properties.PlateName}`);
+  });
+
+}
 /*****
+ * 
  * Main Program
  */
 // Create the tile layer that will be the background of our map
@@ -121,8 +146,19 @@ var satellitemap = L.tileLayer("https://api.mapbox.com/styles/v1/mapbox/satellit
             });
 
         // Add the marker to the quakeMarkers array
-        quakeMarkers.push(quakeMarker.bindPopup(`<h3>Magnitude : ${locations[i].properties.mag}</h3>Location: ${place}`));
+        quakeMarker.bindPopup(`<h3>Magnitude : ${locations[i].properties.mag}</h3>Location: ${place}`);
+        quakeMarker.on('mouseover', function (e) {
+          this.openPopup();
+        });
+        quakeMarker.on('mouseout', function (e) {
+          this.closePopup();
+        });
+        quakeMarker.on('click', function (e) {
+          this.openPopup();
+        });
+        quakeMarkers.push(quakeMarker);
         };
+
         L.layerGroup(quakeMarkers).addTo(quakeLocations);
 
   });
@@ -130,11 +166,12 @@ var satellitemap = L.tileLayer("https://api.mapbox.com/styles/v1/mapbox/satellit
  
     // Creating platonic lines
     d3.json("https://raw.githubusercontent.com/fraxen/tectonicplates/master/GeoJSON/PB2002_boundaries.json", function(plateData) {
-      L.geoJson(plateData, {
+      var geoJsonLayer = L.geoJson(plateData, {
         color: "red",
-        weight: 2
-      })
-      .addTo(faultLines);
+        weight: 2,
+        onEachFeature: onEachFeature
+      });
+      geoJsonLayer.addTo(faultLines);
 
       // add the faultlines to the map
       //faultLines.addTo(map);
@@ -144,7 +181,7 @@ var satellitemap = L.tileLayer("https://api.mapbox.com/styles/v1/mapbox/satellit
     // Create a layer control, pass in the baseMaps and overlayMaps. Add the layer control to the 
     
     L.control.layers(baseMaps, overlayMaps, {
-      collapsed: true
+      collapsed: false
     }).addTo(map);
     addLegend(map);
   
