@@ -5,13 +5,13 @@ function getColor(mag) {
          mag >= 4 ? "orange" :
          mag >= 3 ? "limegreen" :
          mag >= 2 ? "lime" :
-         mag >= 1 ? "lightgreen" :
+         mag >= 1 ? "limegreen" :
          mag >= 0 ? "yellow" :
                     "white";
 }
 // function to determine marker size based on population
 function markerSize(magnitude) {
-  return magnitude * 15000;
+  return magnitude * 20000;
 }
 
 // function to add legend
@@ -40,12 +40,7 @@ function addLegend(map) {
 }
 function createMap(quakeLocations) {
 
-  var maxBounds = L.latLngBounds(
-    L.latLng(5.499550, -167.276413), //Southwest
-    L.latLng(83.162102, -52.233040)  //Northeast
-  );
-
-  // Create the tile layer that will be the background of our map
+   // Create the tile layer that will be the background of our map
   var lightmap = L.tileLayer("https://api.mapbox.com/styles/v1/mapbox/light-v9/tiles/256/{z}/{x}/{y}?access_token={accessToken}", {
     attribution: "Map data &copy; <a href=\"http://openstreetmap.org\">OpenStreetMap</a> contributors, <a href=\"http://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA</a>, Imagery © <a href=\"http://mapbox.com\">Mapbox</a>",
     maxZoom: 18,
@@ -86,7 +81,7 @@ function createMarkers(response) {
 
   // Pull the "stations" property off of response.data
   var locations = response.features;
-  //var updatedAt = 
+   
   // Initialize an array to hold bike markers
   var quakeMarkers = [];
 
@@ -126,5 +121,5 @@ function createMarkers(response) {
 }
 
 
-// Perform an API call to the Citi Bike API to get station information. Call createMarkers when complete
+// Perform an API call to the USGS API to get earthquake information and calling createMarkers function when complete
 d3.json("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_month.geojson", createMarkers);

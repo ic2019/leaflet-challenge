@@ -16,7 +16,7 @@ function getColor(mag) {
 */
 function markerSize(magnitude) {
 
-  return magnitude * 15000;
+  return magnitude * 20000;
 }
 /**** 
 // function to add legend
@@ -37,7 +37,7 @@ function addLegend(map) {
        '<span>'+ categories[i] +'</span>' + '<br>' ;
         
         }
-        //div.innerHTML = labels.join('<br>');
+        
     return div;
     };
     legend.addTo(map);
@@ -173,8 +173,6 @@ var satellitemap = L.tileLayer("https://api.mapbox.com/styles/v1/mapbox/satellit
       });
       geoJsonLayer.addTo(faultLines);
 
-      // add the faultlines to the map
-      //faultLines.addTo(map);
 
     });
         
